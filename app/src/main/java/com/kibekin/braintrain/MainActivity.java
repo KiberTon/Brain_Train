@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,7 +46,14 @@ public class MainActivity extends AppCompatActivity {
         options.add(textViewOpinion1);
         options.add(textViewOpinion2);
         options.add(textViewOpinion3);
+
+        playNext();
+
+    }
+
+    private void playNext(){
         generateQuestion();
+
         for (int i = 0; i < options.size(); i++){
             if (i == rightAnswerPosition) {
                 options.get(i).setText(Integer.toString(rightAnswer));
@@ -56,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void generateQuestion() {
+
         int a = (int) (Math.random() * (max - min + 1) + min);
         int b = (int) (Math.random() * (max - min + 1) + min);
         int mark = (int) (Math.random() * 2);
@@ -67,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
             rightAnswer = a - b;
             question = String.format("%s - %s", a, b);
         }
+        textViewQuestion.setText(question);
         rightAnswerPosition = (int) (Math.random() * 4);
     }
 
@@ -77,5 +87,9 @@ public class MainActivity extends AppCompatActivity {
         } while (result == rightAnswer);
         return result;
 
+    }
+
+    public void onClickAnswers(View view) {
+        playNext();
     }
 }
