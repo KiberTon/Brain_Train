@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
     private boolean isPositive;
     private int min = 5;
     private int max = 30;
+    private int countOfQuestions = 0;
+    private int countOfRightAnswers = 0;
 
 
     @Override
@@ -51,16 +54,17 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void playNext(){
+    private void playNext() {
         generateQuestion();
-
-        for (int i = 0; i < options.size(); i++){
+        for (int i = 0; i < options.size(); i++) {
             if (i == rightAnswerPosition) {
                 options.get(i).setText(Integer.toString(rightAnswer));
-            }else {
+            } else {
                 options.get(i).setText(Integer.toString(generateWrongAnswer()));
             }
         }
+        String score = String.format("%s / %s", countOfRightAnswers, countOfQuestions);
+        textViewScore.setText(score);
     }
 
     private void generateQuestion() {
@@ -89,7 +93,24 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private String getTime(long millis){
+        int seconds = (int) (millis / 1000);
+        int minutes = seconds / 60;
+        seconds = seconds % 60;
+        return String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
+    }
+
     public void onClickAnswers(View view) {
+        TextView textView = (TextView) view;
+        String answer = textView.getText().toString();
+        int chosenAnswer = Integer.parseInt(answer);
+        if (chosenAnswer == rightAnswer) {
+            countOfRightAnswers++;
+            Toast.makeText(this, "Верно", Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(this, "Неверно", Toast.LENGTH_SHORT).show();
+        }
+        countOfQuestions++;
         playNext();
     }
 }
